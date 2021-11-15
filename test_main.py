@@ -47,7 +47,7 @@ class CashRegister:
         self.orders = []
         self.sum = 0
 
-    def order(self, name: str, quantity: int):
+    def order(self, name: str, quantity: float):
         self.warehouse.has(name)
         self.orders.append((name, quantity))
 
