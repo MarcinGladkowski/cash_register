@@ -1,21 +1,32 @@
 from test_main import Warehouse, Product, CashRegister
+import os
 
 warehouse = Warehouse()
-warehouse.add(Product(name='Banana', unit='kg', price=499))
+warehouse.add(Product(name='banana', unit='kg', price=49900))
+warehouse.add(Product(name='avocado', unit='item', price=20000))
 
 cash_register = CashRegister(warehouse)
 
-product_name = input('Choose product by name, please\n')
+while True:
+    product_name = input('Choose product by name or finish (f), please\n')
 
-if not product_name:
-    raise Exception
+    if product_name == 'f':
+        bill = cash_register.bill()
 
-product = warehouse.get(product_name)
+        for i, order_product in enumerate(bill.products):
+            print(f"{i}: product: {order_product[0]} - quantity: {order_product[1]} - sum: {order_product[2]/100:.2f}")
 
-product_quantity = input('Choose quantity of product, please\n')
+        print(f"bill summarize: {bill.sum/100:.2f}")
+        break
 
-cash_register.order(name=product_name, quantity=int(product_quantity))
+    if not product_name:
+        raise Exception
 
-sum = cash_register.sum()
+    product = warehouse.get(product_name.lower())
 
-print(sum)
+    product_quantity = input('Choose quantity of product, please\n')
+
+    cash_register.order(name=product_name, quantity=int(product_quantity))
+
+    clear = lambda: os.system('clear')
+    clear()

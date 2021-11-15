@@ -17,34 +17,10 @@ class Product:
         self.price = price
 
 
-def test_create_product():
-    product = Product(name='Banana', unit='kg', price=499)
-
-    assert product.name == 'Banana'
-    assert product.unit == 'kg'
-    assert product.price == 499
-
-
-def test_create_product_with_incorrect_unit():
-    with pytest.raises(Exception):
-        Product(name='Banana', unit='test', price=499)
-
-
-def test_create_product_without_unit():
-    with pytest.raises(Exception):
-        Product(name='Banana', price=499)
-
-
-def test_create_product_with_incorrect_price():
-    with pytest.raises(Exception):
-        Product(name='Banana', price=0)
-
-    with pytest.raises(Exception):
-        Product(name='Banana', price=-1)
-
-
 class Warehouse:
-    __products = []
+
+    def __init__(self) -> None:
+        self.__products = []
 
     def add(self, product: Product):
         self.__products.append(product)
@@ -64,31 +40,8 @@ class Warehouse:
         raise Exception()
 
 
-def test_add_product_to_warehouse():
-    warehouse = Warehouse()
-    warehouse.add(Product(name='Banana', unit='kg', price=499))
-
-    assert 1 == len(warehouse.products())
-
-
-def test_get_product_from_warehouse_by_name():
-    warehouse = Warehouse()
-    warehouse.add(Product(name='Banana', unit='kg', price=499))
-
-    assert 'Banana' == warehouse.get(name='Banana').name
-
-
-def test_raise_exception_when_product_not_found_in_warehouse():
-    with pytest.raises(Exception):
-        Warehouse().get('Avocado')
-
-
-def test_raise_exception_when_product_not_found_in_warehouse_using_has_method():
-    with pytest.raises(Exception):
-        Warehouse().has('Avocado')
-
-
 class CashRegister:
+
     def __init__(self, warehouse: Warehouse) -> None:
         self.warehouse = warehouse
         self.orders = []
@@ -109,65 +62,104 @@ class CashRegister:
         return Bill(sum=self.sum, products=products)
 
 
-def test_order_two_kg_of_product_in_cash_register():
-    warehouse = Warehouse()
-    warehouse.add(Product(name='Banana', unit='kg', price=499))
-
-    cash_register = CashRegister(warehouse)
-
-    cash_register.order(name='Banana', quantity=2)
-
-    assert 998 == cash_register.bill().sum
-
-
 class Bill:
     def __init__(self, sum: int, products: list) -> None:
         self.products = products
         self.sum = sum
 
 
-def test_order_on_cash_register_and_return_bill():
-    warehouse = Warehouse()
-    warehouse.add(Product(name='Banana', unit='kg', price=499))
+class TestClass:
+    def test_create_product(self):
+        product = Product(name='Banana', unit='kg', price=499)
 
-    cash_register = CashRegister(warehouse)
+        assert product.name == 'Banana'
+        assert product.unit == 'kg'
+        assert product.price == 499
 
-    cash_register.order(name='Banana', quantity=2)
+    def test_create_product_with_incorrect_unit(self):
+        with pytest.raises(Exception):
+            Product(name='Banana', unit='test', price=499)
 
-    assert Bill == type(cash_register.bill())
+    def test_create_product_without_unit(self):
+        with pytest.raises(Exception):
+            Product(name='Banana', price=499)
 
+    def test_create_product_with_incorrect_price(self):
+        with pytest.raises(Exception):
+            Product(name='Banana', price=0)
 
-def test_order_two_kg_of_product_in_cash_register_and_check_bill():
-    warehouse = Warehouse()
-    warehouse.add(Product(name='Banana', unit='kg', price=499))
+        with pytest.raises(Exception):
+            Product(name='Banana', price=-1)
 
-    cash_register = CashRegister(warehouse)
+    def test_add_product_to_warehouse(test):
+        warehouse = Warehouse()
+        warehouse.add(Product(name='Banana', unit='kg', price=499))
 
-    cash_register.order(name='Banana', quantity=2)
+        assert 1 == len(warehouse.products())
 
-    assert 1 == len(cash_register.bill().products)
+    def test_get_product_from_warehouse_by_name(test):
+        warehouse = Warehouse()
+        warehouse.add(Product(name='Banana', unit='kg', price=499))
 
+        assert 'Banana' == warehouse.get(name='Banana').name
 
-def test_order_two_different_product():
-    warehouse = Warehouse()
-    warehouse.add(Product(name='Tomatoes', unit='kg', price=1000))
-    warehouse.add(Product(name='Avocado', unit='item', price=2000))
+    def test_raise_exception_when_product_not_found_in_warehouse(test):
+        with pytest.raises(Exception):
+            Warehouse().get('Avocado')
 
-    cash_register = CashRegister(warehouse)
+    def test_raise_exception_when_product_not_found_in_warehouse_using_has_method(test):
+        with pytest.raises(Exception):
+            Warehouse().has('Avocado')
 
-    cash_register.order(name='Tomatoes', quantity=2)
-    cash_register.order(name='Avocado', quantity=2)
+    def test_order_two_kg_of_product_in_cash_register(self):
+        warehouse = Warehouse()
+        warehouse.add(Product(name='Banana', unit='kg', price=499))
 
-    bill = cash_register.bill()
+        cash_register = CashRegister(warehouse)
 
-    assert 2 == len(bill.products)
-    assert 6000 == bill.sum
+        cash_register.order(name='Banana', quantity=2)
 
+        assert 998 == cash_register.bill().sum
 
-def test_raise_exception_when_try_order_product_which_are_not_available():
-    warehouse = Warehouse()
-    warehouse.add(Product(name='Avocado', unit='item', price=2000))
-    cash_register = CashRegister(warehouse)
+    def test_order_on_cash_register_and_return_bill(self):
+        warehouse = Warehouse()
+        warehouse.add(Product(name='Banana', unit='kg', price=499))
 
-    with pytest.raises(Exception):
+        cash_register = CashRegister(warehouse)
+
+        cash_register.order(name='Banana', quantity=2)
+
+        assert Bill == type(cash_register.bill())
+
+    def test_order_two_kg_of_product_in_cash_register_and_check_bill(self):
+        warehouse = Warehouse()
+        warehouse.add(Product(name='Banana', unit='kg', price=499))
+
+        cash_register = CashRegister(warehouse)
+
+        cash_register.order(name='Banana', quantity=2)
+
+        assert 1 == len(cash_register.bill().products)
+
+    def test_order_two_different_product(self):
+        warehouse = Warehouse()
+        warehouse.add(Product(name='Tomatoes', unit='kg', price=1000))
+        warehouse.add(Product(name='Avocado', unit='item', price=2000))
+
+        cash_register = CashRegister(warehouse)
+
         cash_register.order(name='Tomatoes', quantity=2)
+        cash_register.order(name='Avocado', quantity=2)
+
+        bill = cash_register.bill()
+
+        assert 2 == len(bill.products)
+        assert 6000 == bill.sum
+
+    def test_raise_exception_when_try_order_product_which_are_not_available(self):
+        warehouse = Warehouse()
+        warehouse.add(Product(name='Avocado', unit='item', price=2000))
+        cash_register = CashRegister(warehouse)
+
+        with pytest.raises(Exception):
+            cash_register.order(name='Tomatoes', quantity=2)
